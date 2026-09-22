@@ -1,45 +1,24 @@
-# IMAGENES DE DOCKER UTILIZADAS
+# Administración de Imágenes y Evidencia Multi-Etapa (Semana 3)
 
-Durante la práctica se utilizaron las siguientes imágenes Docker
+## Registro de Imagen Construida
 
-## Imagen
+| Nombre de la Imagen | Etiqueta | ID de Imagen | Tamaño Final |
+| :--- | :--- | :--- | :--- |
+| `api-app` | `1.0.0` | `08444ea8a666` | **55.5 MB** |
+| `api-app` | `latest` | `08444ea8a666` | **55.5 MB** |
 
-- **PostgreSQL**
+## Análisis de Infraestructura y Buenas Prácticas
 
-## Etiqueta
+1. **Optimización con Dockerfile Multi-Etapa:**
+   - Se utilizó una primera etapa (`builder`) con la imagen base `python:3.14-slim` para compilar e instalar las dependencias (`fastapi` y `uvicorn`) en la ruta especificada `--prefix=/install`.
+   - En la etapa final de ejecución, solo se copiaron los paquetes instalados desde `/install` hacia `/usr/local`, descartando librerías de desarrollo, cachés de `pip` y archivos temporales de compilación.
+   - Resultado: La imagen se redujo a solo **55.5 MB**.
 
-- postgres:18-alpine
+2. **Seguridad y Menos Privilegios:**
+   - Se creó el usuario del sistema `appuser` con UID `1001`.
+   - La aplicación se ejecuta bajo la directiva `USER appuser`, evitando la ejecución como `root` dentro del contenedor.
 
-## Tamaño
-
-- 121MB
-
-## Proposito
-
-Servidor de base de datos PostgreSQL 18 utilizado para crear el contenedor db-app
-
-## Imagen
-
-- **Nginx**
-
-## Etiqueta
-
-- nginx:1.30-alpine
-
-## Tamaño
-
-- 29.4MB
-
-## Proposito
-
-Servidor web utilizado para levantar el contenedor web y realizar una prueba mediante el puerto 8080.
-
-# USO DE LAS IMAGENES
-
-**postgres:18-alpine**
-
-Imagen utilizada para ejecutar PostgreSQL 18 en el contenedor db-app. Se configuró una base de datos llamada appdb y un volumen Docker para practicar la persistencia de datos.
-
-**nginx:1.30-alpine**
-
-Imagen utilizada para ejecutar Nginx en el contenedor web. Se publicó el puerto 80 del contenedor mediante el puerto 8080 del equipo anfitrión y se verificó su funcionamiento mediante curl http://localhost:8080.
+3. **Operaciones de Ciclo de Vida Ejecutadas:**
+   - **Etiquetado:** Se versionó la imagen `1.0.0` y se asoció el tag `latest`.
+   - **Inspección de capas:** Se utilizó `docker history api-app:1.0.0` para verificar la adición de archivos por capa.
+   - **Diagnóstico de espacio:** Se verificó el almacenamiento utilizado con `docker system df`.
