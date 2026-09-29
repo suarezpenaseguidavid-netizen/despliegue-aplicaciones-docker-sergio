@@ -3,9 +3,9 @@
 ## Configuración de Infraestructura
 
 - **Volumen Administrado:** `pgdata-app`
-- **Punto de Montaje en Contenedor:** `/var/lib/postgresql/data`
+- **Punto de Montaje en Contenedor:** `/var/lib/postgresql`
 - **Red de Docker (Bridge):** `app-net`
-- **Contenedores Interconectados:** `api-service` (API FastAPI) y `db-app` (PostgreSQL 16)
+- **Contenedores Interconectados:** `api-service` (API FastAPI) y `db-app` (PostgreSQL 18)
 
 ## Verificación de Persistencia y Tolerancia a Fallos
 1. Se creó el volumen independiente `pgdata-app` y la red de aislamiento `app-net`.
